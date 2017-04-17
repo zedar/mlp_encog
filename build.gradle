@@ -1,0 +1,22 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  jcenter()
+}
+
+dependencies {
+  compile group: 'org.encog', name: 'encog-core', version: '3.3.0'
+
+  testCompile 'junit:junit:4.12'
+}
+
+task runNN(dependsOn: 'classes', type: JavaExec) {
+  classpath = sourceSets .main. runtimeClasspath
+  main="mlp.Main"
+  args=["in=4", "inf=1,2,3,4", "hidden=2", "out=4", "trainDSPath=data/transformation.txt", "testDSPath=data/transformation.txt"]
+}
+
