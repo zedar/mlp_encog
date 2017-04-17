@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Reader {
-  public static double[][][] loadDS(String trainDSPath, int inN, int[] inFs, int outN) throws Exception {
+  public static double[][][] loadDS(String dsPath, int inN, int[] inFs, int outN, int[] outFs, boolean outFeatureAs01) throws Exception {
     ArrayList<double[]> in = new ArrayList<>();
     ArrayList<double[]> out = new ArrayList<>();
 
     // we assume that input file is in csv format with space as delimiter. First 4 values are features while 5th is label.
-    BufferedReader br = new BufferedReader(new FileReader(trainDSPath));
+    BufferedReader br = new BufferedReader(new FileReader(dsPath));
     String line;
     while ((line = br.readLine()) != null) {
       String[] features = line.split(" ");
-//      if (features.length < inN+1) {
-//        throw new IllegalArgumentException("train DS has invalid number of features");
-//      }
+      if (features.length <= inN || features.length <= outN) {
+        throw new IllegalArgumentException("DataSet has invalid number of features");
+      }
       double[] inf = new double[inN];
       for (int i=0; i<inN; i++) {
         int pos = i;
@@ -28,30 +28,26 @@ public class Reader {
       }
       in.add(inf);
 
-//      int outv = Integer.valueOf(features[features.length-1]);
-//      if (outv < 0 || outv > outN) {
-//        throw new IllegalArgumentException("Invalid output feature value. Not inline with number of output neurons");
-//      }
-//      double[] outf = new double[outN];
-//      Arrays.fill(outf, 0.0);
-//      outf[outv-1] = 1.0;
-
-      // ONE OUTPUT ATTRIBUTE
-//      double[] outf = new double[outN];
-//      Arrays.fill(outf, 0.0);
-//      outf[0] = Double.valueOf(features[features.length-1]);
-//      out.add(outf);
-
-      // OUTPUT THE SAME AS INPUT
-      double[] outf = new double[inN];
-      for (int i=0; i<inN; i++) {
-        int pos = i;
-        if (inFs != null && i < inFs.length) {
-          pos = inFs[i]-1;
+      if (outFeatureAs01) {
+        int outv = Integer.valueOf(features[features.length-1]);
+        if (outv < 0 || outv > outN) {
+          throw new IllegalArgumentException("Invalid output feature value. Not inline with number of output neurons");
         }
-        outf[i] = Double.valueOf(features[pos]);
+        double[] outf = new double[outN];
+        Arrays.fill(outf, 0.0);
+        outf[outv-1] = 1.0;
+        out.add(outf);
+      } else {
+        double[] outf = new double[outN];
+        for (int i=0; i<outN; i++) {
+          int pos = i;
+          if (outFs != null && i < outFs.length) {
+            pos = outFs[i]-1;
+          }
+          outf[i] = Double.valueOf(features[pos]);
+        }
+        out.add(outf);
       }
-      out.add(outf);
     }
     return new double[][][] {in.toArray(new double[][]{{}}), out.toArray(new double[][]{{}})};
   }

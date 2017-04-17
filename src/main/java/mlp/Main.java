@@ -42,14 +42,14 @@ public class Main {
       System.out.println("Undefined train data file.");
       return;
     }
-    double[][][] trainDS = Reader.loadDS(cfg.getTrainDSPath(), cfg.getInLayerN(), cfg.getInLayerF(), cfg.getOutLayerN());
+    double[][][] trainDS = Reader.loadDS(cfg.getTrainDSPath(), cfg.getInLayerN(), cfg.getInLayerF(), cfg.getOutLayerN(), cfg.getOutLayerF(), false);
     double[][] inDS = trainDS[0];
     double[][] outDS = trainDS[1];
     double[][] inTestDS = null;
     double[][] outTestDS = null;
 
     if (cfg.getTestDSPath() != null) {
-      double[][][] testDS = Reader.loadDS(cfg.getTestDSPath(), cfg.getInLayerN(), cfg.getInLayerF(), cfg.getOutLayerN());
+      double[][][] testDS = Reader.loadDS(cfg.getTestDSPath(), cfg.getInLayerN(), cfg.getInLayerF(), cfg.getOutLayerN(), cfg.getOutLayerF(), false);
       inTestDS = testDS[0];
       outTestDS = testDS[1];
     }

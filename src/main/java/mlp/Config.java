@@ -9,6 +9,7 @@ public class Config {
   private int[] inLayerF;
   private int hiddenLayerN = 4;
   private int outLayerN = 3;
+  private int[] outLayerF;
   private String trainDSPath;
   private String testDSPath;
 
@@ -30,6 +31,12 @@ public class Config {
       String[] inFs = inF.split(",");
       inFi = Arrays.stream(inFs).map(Integer::valueOf).mapToInt(Integer::intValue).toArray();
     }
+    String outF = argsm.get("outf");
+    int[] outFi = null;
+    if (outF != null) {
+      String[] outFs = outF.split(",");
+      outFi = Arrays.stream(outFs).map(Integer::valueOf).mapToInt(Integer::intValue).toArray();
+    }
     String hidden = argsm.get("hidden");
     Integer hiddenN = hidden != null ? Integer.valueOf(hidden) : null;
     String out = argsm.get("out");
@@ -45,6 +52,10 @@ public class Config {
 
   public int[] getInLayerF() {
     return inLayerF;
+  }
+
+  public int[] getOutLayerF() {
+    return outLayerF;
   }
 
   public int getHiddenLayerN() {
